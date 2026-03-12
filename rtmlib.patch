@@ -1,0 +1,13 @@
+diff --git a/src/rmtld3/rmtld3.h b/src/rmtld3/rmtld3.h
+index 340175c..1ed521d 100644
+--- a/src/rmtld3/rmtld3.h
++++ b/src/rmtld3/rmtld3.h
+@@ -25,7 +25,7 @@
+ #include <assert.h>
+ #include <utility>
+ 
+-#include "time_compat.h"
++#include "../time_compat.h"
+ 
+ typedef unsigned int proposition;
+ typedef std::pair<timeabs, bool> duration;

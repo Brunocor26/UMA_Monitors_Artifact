@@ -60,6 +60,14 @@ If you already cloned without `--recurse-submodules`:
 git submodule update --init --recursive
 ```
 
+### Applying the rtmlib patch
+
+This repo includes `rtmlib.patch`, which fixes an include path in `rtmlib/src/rmtld3/rmtld3.h` required for the WASM build (changes `"time_compat.h"` to `"../time_compat.h"`). Apply it after cloning:
+
+```bash
+git apply --directory=rtmlib rtmlib.patch
+```
+
 ---
 
 ## Building — Native
