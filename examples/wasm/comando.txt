@@ -1,0 +1,5 @@
+g++ -Wall -Wextra -std=gnu++11 -DRTMLIB_ENABLE_MAP_SORT $DEBUG -I"$(pwd)/../rtmlib/src" main.cpp -o cpptest -pthread -latomic
+
+ou
+
+g++ -Wall -Wextra -std=gnu++11 -DRTMLIB_ENABLE_MAP_SORT $DEBUG main.cpp -o cpptest -pthread -latomic

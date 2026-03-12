@@ -1,0 +1,128 @@
+bruno@bruno-Aspire-A715-74G:~/Desktop/Projeto/monitor/teste$ /opt/wasi-sdk/bin/clang++   --sysroot=/opt/wasi-sdk/share/wasi-sysroot   -Wall -Wextra -std=gnu++11   -DRTMLIB_ENABLE_MAP_SORT $DEBUG   -I"$(pwd)/../rtmlib/src"   main.cpp -o /wasm/cpptest.wasm
+In file included from main.cpp:19:
+In file included from ./../rtmlib/src/rmtld3/rmtld3.h:28:
+In file included from ./../rtmlib/src/rmtld3/../time_compat.h:25:
+./../rtmlib/src/rmtld3/../atomic_compat.h:285:2: warning: "Atomic guarantees are not supported!" [-W#warnings]
+  285 | #warning "Atomic guarantees are not supported!"
+      |  ^
+In file included from main.cpp:19:
+In file included from ./../rtmlib/src/rmtld3/rmtld3.h:28:
+./../rtmlib/src/rmtld3/../time_compat.h:184:2: error: "This monitoring library only supports NuttX ARM Cortex-M4, x86 and x86_64
+      architectures!"
+  184 | #error                                                                          \
+      |  ^
+./../rtmlib/src/rmtld3/../time_compat.h:189:9: error: unknown type name 'timeabs'
+  189 | typedef timeabs timespanw;
+      |         ^
+In file included from main.cpp:19:
+./../rtmlib/src/rmtld3/rmtld3.h:31:19: error: use of undeclared identifier 'timeabs'
+   31 | typedef std::pair<timeabs, bool> duration;
+      |                   ^~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:39:10: error: use of undeclared identifier 'timeabs'
+   39 |   return make_duration(lhs.first + rhs.first, lhs.second || rhs.second);
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:36:45: note: expanded from macro 'make_duration'
+   36 | #define make_duration(r, b) std::make_pair((timeabs)r, b)
+      |                                             ^~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:39:50: error: member reference base type 'const duration' (aka 'const int') is not a structure or
+      union
+   39 |   return make_duration(lhs.first + rhs.first, lhs.second || rhs.second);
+      |                                               ~~~^~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:39:64: error: member reference base type 'const duration' (aka 'const int') is not a structure or
+      union
+   39 |   return make_duration(lhs.first + rhs.first, lhs.second || rhs.second);
+      |                                                             ~~~^~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:43:10: error: use of undeclared identifier 'timeabs'
+   43 |   return make_duration(lhs.first * rhs.first, lhs.second || rhs.second);
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:36:45: note: expanded from macro 'make_duration'
+   36 | #define make_duration(r, b) std::make_pair((timeabs)r, b)
+      |                                             ^~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:43:50: error: member reference base type 'const duration' (aka 'const int') is not a structure or
+      union
+   43 |   return make_duration(lhs.first * rhs.first, lhs.second || rhs.second);
+      |                                               ~~~^~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:43:64: error: member reference base type 'const duration' (aka 'const int') is not a structure or
+      union
+   43 |   return make_duration(lhs.first * rhs.first, lhs.second || rhs.second);
+      |                                                             ~~~^~~~~~~
+In file included from main.cpp:20:
+In file included from ./Rtm_compute_4ddc.h:36:
+In file included from ./../rtmlib/src/rmtld3/formulas.h:29:
+./../rtmlib/src/rmtld3/terms.h:27:35: error: unknown type name 'timespan'; did you mean 'timespec'?
+   27 | template <typename T, typename E, timespan t_upper>
+      |                                   ^~~~~~~~
+      |                                   timespec
+/opt/wasi-sdk/share/wasi-sysroot/include/wasm32-wasi/__struct_timespec.h:7:8: note: 'timespec' declared here
+    7 | struct timespec {
+      |        ^
+In file included from main.cpp:20:
+In file included from ./Rtm_compute_4ddc.h:36:
+In file included from ./../rtmlib/src/rmtld3/formulas.h:29:
+./../rtmlib/src/rmtld3/terms.h:27:44: error: a non-type template parameter cannot have type 'timespec' before C++20
+   27 | template <typename T, typename E, timespan t_upper>
+      |                                            ^
+./../rtmlib/src/rmtld3/terms.h:28:34: error: unknown type name 'timespan'; did you mean 'timespec'?
+   28 | duration duration_term(T &trace, timespan &t) {
+      |                                  ^~~~~~~~
+      |                                  timespec
+/opt/wasi-sdk/share/wasi-sysroot/include/wasm32-wasi/__struct_timespec.h:7:8: note: 'timespec' declared here
+    7 | struct timespec {
+      |        ^
+In file included from main.cpp:20:
+In file included from ./Rtm_compute_4ddc.h:36:
+In file included from ./../rtmlib/src/rmtld3/formulas.h:29:
+./../rtmlib/src/rmtld3/terms.h:31:18: error: use of undeclared identifier 'timeabs'
+   31 |   duration acc = make_duration(0, false);
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:36:45: note: expanded from macro 'make_duration'
+   36 | #define make_duration(r, b) std::make_pair((timeabs)r, b)
+      |                                             ^~~~~~~
+In file included from main.cpp:20:
+In file included from ./Rtm_compute_4ddc.h:36:
+In file included from ./../rtmlib/src/rmtld3/formulas.h:29:
+./../rtmlib/src/rmtld3/terms.h:34:42: error: unknown type name 'timespan'; did you mean 'timespec'?
+   34 |   auto indicator_function = [](T &trace, timespan &t) -> duration {
+      |                                          ^~~~~~~~
+      |                                          timespec
+/opt/wasi-sdk/share/wasi-sysroot/include/wasm32-wasi/__struct_timespec.h:7:8: note: 'timespec' declared here
+    7 | struct timespec {
+      |        ^
+In file included from main.cpp:20:
+In file included from ./Rtm_compute_4ddc.h:36:
+In file included from ./../rtmlib/src/rmtld3/formulas.h:29:
+./../rtmlib/src/rmtld3/terms.h:40:18: error: use of undeclared identifier 'timeabs'
+   40 |                ? make_duration(1, false)
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:36:45: note: expanded from macro 'make_duration'
+   36 | #define make_duration(r, b) std::make_pair((timeabs)r, b)
+      |                                             ^~~~~~~
+In file included from main.cpp:20:
+In file included from ./Rtm_compute_4ddc.h:36:
+In file included from ./../rtmlib/src/rmtld3/formulas.h:29:
+./../rtmlib/src/rmtld3/terms.h:41:42: error: use of undeclared identifier 'timeabs'
+   41 |                : ((formula == T_FALSE) ? make_duration(0, false)
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:36:45: note: expanded from macro 'make_duration'
+   36 | #define make_duration(r, b) std::make_pair((timeabs)r, b)
+      |                                             ^~~~~~~
+In file included from main.cpp:20:
+In file included from ./Rtm_compute_4ddc.h:36:
+In file included from ./../rtmlib/src/rmtld3/formulas.h:29:
+./../rtmlib/src/rmtld3/terms.h:42:42: error: use of undeclared identifier 'timeabs'
+   42 |                                        : make_duration(0, true));
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~
+./../rtmlib/src/rmtld3/rmtld3.h:36:45: note: expanded from macro 'make_duration'
+   36 | #define make_duration(r, b) std::make_pair((timeabs)r, b)
+      |                                             ^~~~~~~
+In file included from main.cpp:20:
+In file included from ./Rtm_compute_4ddc.h:36:
+In file included from ./../rtmlib/src/rmtld3/formulas.h:29:
+./../rtmlib/src/rmtld3/terms.h:61:10: error: member reference base type 'duration' (aka 'int') is not a structure or union
+   61 |       acc.first = (c_time - t) * symbol.first;
+      |       ~~~^~~~~~
+./../rtmlib/src/rmtld3/terms.h:62:10: error: member reference base type 'duration' (aka 'int') is not a structure or union
+   62 |       acc.second = symbol.second;
+      |       ~~~^~~~~~~
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+1 warning and 20 errors generated.
