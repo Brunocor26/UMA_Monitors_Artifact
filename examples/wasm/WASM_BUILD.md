@@ -1,36 +1,36 @@
-# Build para WASM — alterações e comando
+# WASM Build — Changes and Command
 
-## Ficheiros criados
+## Created files
 
 ### `wasi_compat.h`
-Header incluído via `-include` antes de qualquer outro ficheiro.
-Define dois itens que o WASI SDK não fornece:
+Header injected via `-include` before any other file.
+Defines two items that the WASI SDK does not provide:
 
-- **`YIELD()`** — macro no-op. O `atomic_compat.h` só define `YIELD()` no
-  sub-ramo `__x86_64__`; no ramo `__i386__` (usado para wasm32) a macro fica
-  indefinida e a compilação falha.
-- **`pthread_attr_setschedparam`** — stub inline que retorna 0. O WASI guarda
-  esta função atrás de `#ifdef __wasilibc_unmodified_upstream` porque não tem
-  suporte a scheduling de CPU, por isso nunca é declarada.
+- **`YIELD()`** — no-op macro. `atomic_compat.h` only defines `YIELD()` in
+  the `__x86_64__` branch; in the `__i386__` branch (used for wasm32) the macro
+  is left undefined and compilation fails.
+- **`pthread_attr_setschedparam`** — inline stub that returns 0. WASI guards
+  this function behind `#ifdef __wasilibc_unmodified_upstream` because it has no
+  CPU scheduling support, so it is never declared.
 
 ### `wasi_stubs.cpp`
-Ficheiro de implementação compilado junto com `main.cpp`.
-Fornece um stub com `__attribute__((weak))` para:
+Implementation file compiled alongside `main.cpp`.
+Provides a `__attribute__((weak))` stub for:
 
-- **`pthread_attr_setschedpolicy`** — declarada no `pthread.h` do WASI mas não
-  implementada em `wasi-libc`; sem este stub o linker falha com "undefined symbol".
-
----
-
-## Porquê não usar `-D__HW__`
-
-A flag original `-D__HW__` causa um `#error` directo no pré-processador dentro
-de `writer.h` (bloco `#if defined(__HW__)`), impedindo a compilação
-independentemente das funções que sejam efectivamente chamadas.
+- **`pthread_attr_setschedpolicy`** — declared in WASI's `pthread.h` but not
+  implemented in `wasi-libc`; without this stub the linker fails with "undefined symbol".
 
 ---
 
-## Comando de compilação
+## Why not use `-D__HW__`
+
+The original `-D__HW__` flag triggers a `#error` directly in the preprocessor
+inside `writer.h` (the `#if defined(__HW__)` block), preventing compilation
+regardless of which functions are actually called.
+
+---
+
+## Compilation command
 
 ```bash
 /opt/wasi-sdk/bin/clang++ \
@@ -41,17 +41,17 @@ independentemente das funções que sejam efectivamente chamadas.
   -Duseconds_t=uint32_t \
   -fno-exceptions \
   -include wasi_compat.h \
-  -I"$(pwd)/../rtmlib/src" \
+  -I"$(pwd)/../../rtmlib/src" \
   main.cpp wasi_stubs.cpp -o wasm/cpptest.wasm
 ```
 
-### Flags novas em relação ao comando original
+### New flags relative to the original command
 
-| Flag | Motivo |
+| Flag | Reason |
 |------|--------|
-| `--target=wasm32-wasi` | Target standard sem memória partilhada; `wasm32-wasi-threads` activava shared memory que o `iwasm` não suporta por defeito |
-| `-D__i386__ -D__x86__` | Selecciona o ramo de 32 bits em `atomic_compat.h` e `time_compat.h`; o ramo `__x86_64__` usaria `__int128` (16 bytes) que o wasm32 não suporta |
-| `-Duseconds_t=uint32_t` | O sysroot do WASI tem `suseconds_t` mas não `useconds_t` |
-| `-fno-exceptions` | Evita símbolos `__cxa_*` não resolvidos |
-| `-include wasi_compat.h` | Injeta as stubs acima antes de qualquer header da biblioteca |
-| `wasi_stubs.cpp` | Implementação fraca de `pthread_attr_setschedpolicy` |
+| `--target=wasm32-wasi` | Standard target without shared memory; `wasm32-wasi-threads` enabled shared memory which `iwasm` does not support by default |
+| `-D__i386__ -D__x86__` | Selects the 32-bit branch in `atomic_compat.h` and `time_compat.h`; the `__x86_64__` branch would use `__int128` (16 bytes), which wasm32 does not support |
+| `-Duseconds_t=uint32_t` | The WASI sysroot provides `suseconds_t` but not `useconds_t` |
+| `-fno-exceptions` | Avoids unresolved `__cxa_*` symbols |
+| `-include wasi_compat.h` | Injects the stubs above before any library header |
+| `wasi_stubs.cpp` | Weak implementation of `pthread_attr_setschedpolicy` |
