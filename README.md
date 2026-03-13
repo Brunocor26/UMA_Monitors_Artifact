@@ -48,25 +48,17 @@ artifact/
 - [WASI-SDK](https://github.com/WebAssembly/wasi-sdk) ≥ 20 (expected at `/opt/wasi-sdk`)
 - [WAMR](https://github.com/bytecodealliance/wasm-micro-runtime) for running the resulting `.wasm` (`iwasm` command)
 
-### Cloning with submodules
+### Setup
+
+After cloning, run the setup script to initialize submodules and apply the rtmlib patch:
 
 ```bash
-git clone --recurse-submodules https://github.com/<your-user>/<your-repo>.git
+git clone https://github.com/<your-user>/<your-repo>.git
+cd <your-repo>
+./setup.sh
 ```
 
-If you already cloned without `--recurse-submodules`:
-
-```bash
-git submodule update --init --recursive
-```
-
-### Applying the rtmlib patch
-
-This repo includes `rtmlib.patch`, which fixes an include path in `rtmlib/src/rmtld3/rmtld3.h` required for the WASM build (changes `"time_compat.h"` to `"../time_compat.h"`). Apply it after cloning:
-
-```bash
-git apply --directory=rtmlib rtmlib.patch
-```
+The script runs `git submodule update --init --recursive` and then applies `rtmlib.patch`, which fixes an include path in `rtmlib/src/rmtld3/rmtld3.h` required for the WASM build (changes `"time_compat.h"` to `"../time_compat.h"`).
 
 ---
 
