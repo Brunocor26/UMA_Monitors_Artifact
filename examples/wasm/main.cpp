@@ -16,7 +16,7 @@
 // ──────────────────────────────────────────────────────────────────────────────
 // Includes da rtmlib (ajuste os caminhos conforme o vosso projecto)
 // ──────────────────────────────────────────────────────────────────────────────
-#include "../rtmlib/src/rmtld3/rmtld3.h"
+#include "../../rtmlib/src/rmtld3/rmtld3.h"
 #include "Rtm_compute_4ddc.h"
 #include "Rtm_instrument_4ddc.h"
 #include "Rtm_monitor_4ddc.h"

@@ -32,8 +32,8 @@ Formula(s):
   #ifndef RTM_COMPUTE_4DDC_H_
   #define RTM_COMPUTE_4DDC_H_
 
-#include "../rtmlib/src/rmtld3/rmtld3.h"
-#include "../rtmlib/src/rmtld3/formulas.h"
+#include "../../rtmlib/src/rmtld3/rmtld3.h"
+#include "../../rtmlib/src/rmtld3/formulas.h"
   
   #define RTM_TIME_UNIT s
   

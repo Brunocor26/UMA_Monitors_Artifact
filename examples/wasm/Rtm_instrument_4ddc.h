@@ -6,8 +6,8 @@ x86_64 GNU/Linux 2025-10-12 18:14. */
   #define RTM_INSTRUMENT_4DDC_H_
 
 
-#include "../rtmlib/src/writer.h"
-#include "../rtmlib/src/rmtld3/rmtld3.h"
+#include "../../rtmlib/src/writer.h"
+#include "../../rtmlib/src/rmtld3/rmtld3.h"
 
  #define RTM_INSTRUMENT_4DDC_BUFFER_SIZE 100
 

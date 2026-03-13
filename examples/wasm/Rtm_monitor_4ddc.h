@@ -5,9 +5,9 @@ x86_64 GNU/Linux 2025-10-12 18:14. */
   #ifndef RTM_MONITOR_4DDC_H
   #define RTM_MONITOR_4DDC_H
 
-#include "../rtmlib/src/reader.h"
-#include "../rtmlib/src/periodicmonitor.h"
-#include "../rtmlib/src/rmtld3/reader.h"
+#include "../../rtmlib/src/reader.h"
+#include "../../rtmlib/src/periodicmonitor.h"
+#include "../../rtmlib/src/rmtld3/reader.h"
   #include "Rtm_compute_4ddc.h"
 
   /* 100, Event< std::underlying_type<_auto_gen_prop>::type > */
