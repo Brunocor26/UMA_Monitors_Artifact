@@ -6,6 +6,38 @@ The monitors are derived from RMTLD3 (Runtime Metric Temporal Logic with Duratio
 
 ---
 
+## Project Status
+
+This is the artifact for the bachelor's thesis **"Universal Microservices for Application Monitoring"** at UMA. The goal is to demonstrate that the same monitoring microservice — compiled from RMTLD3 formulas to WebAssembly — can run across heterogeneous environments (edge/embedded, cloud, browser) without changing the source code.
+
+### Roadmap
+
+| Task | Status |
+|------|--------|
+| Explore OCapi source code and devcontainer setup | ✅ Done |
+| Compile and run Hello World in C++ with WAMR | ✅ Done |
+| Understand WASI API and JavaScript API | ✅ Done |
+| Study WASM performance (AOT vs JIT in WAMR) | ✅ Done |
+| Generate monitors with rmtld3synth and understand the 3-file structure | ✅ Done |
+| Compile monitors to native binary (C++11) | ✅ Done |
+| Compile monitors to WebAssembly (WASI) | ✅ Done |
+| Design architecture diagram | ✅ Done |
+| Study WAMR architecture and select runtime | ✅ Done (WAMR chosen over Wasm3/others) |
+| Define service contracts (JSON Schema / OpenAPI) | 🔲 Pending |
+| Develop browser adapter (JavaScript API) | 🔲 Pending |
+| Performance evaluation (UMA vs traditional microservices) | 🔲 Pending |
+| Running example on Raspberry Pi Pico | 🔲 Pending |
+
+### Key Insights So Far
+
+- **The formula → code → execution cycle works end-to-end**: rmtld3synth generates C++ from a logical rule (e.g. `a U[10s] b`), which is compiled to WASM and evaluated at runtime.
+- **The 3-file monitor structure mirrors the UMA layers**: `instrument.h` (contract/events), `compute.h` (program/logic), `monitor.h` (adapter/orchestration) are fully decoupled.
+- **WAMR is the chosen runtime**: IoT-oriented, small footprint, supports AOT compilation per target architecture (`wamrc --target=riscv64` for RISC-V). Wasm3 was considered but is discontinued.
+- **AOT tradeoff**: `.aot` binaries eliminate cold-start delays but lose portability (architecture-specific). For this project, the interpreter/JIT mode is preferred to preserve the portability argument.
+- **Target device**: [Raspberry Pi Pico](https://www.raspberrypi.com/products/raspberry-pi-pico/) (RP2040, ARM Cortex-M0+) for the running example — a low-cost embedded device well-suited for demonstrating edge monitoring.
+
+---
+
 ## Repository Structure
 
 ```
