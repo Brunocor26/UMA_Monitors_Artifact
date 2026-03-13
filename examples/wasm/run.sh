@@ -3,7 +3,7 @@
 # Verifica se um ficheiro foi passado como argumento
 if [ -z "$1" ]; then
     echo "Erro: Forneça o nome do ficheiro de entrada."
-    echo "Uso: ./compile_wasm.sh meu_programa.cpp"
+    echo "Uso: ./run.sh meu_programa.cpp"
     exit 1
 fi
 
