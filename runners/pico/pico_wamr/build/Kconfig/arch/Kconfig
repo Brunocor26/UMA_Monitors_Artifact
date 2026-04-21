@@ -1,0 +1,12 @@
+# Load Zephyr Arch Kconfig descriptions.
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/rx/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/x86/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/xtensa/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/sparc/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/riscv/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/posix/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/openrisc/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/mips/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/arm64/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/arm/Kconfig"
+osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/arch/arc/Kconfig"

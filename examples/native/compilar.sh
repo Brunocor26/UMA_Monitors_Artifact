@@ -1,1 +1,0 @@
-g++ -std=c++17 -I../rtmlib/src -I./output/out main.cpp -o monitor -lpthread -latomic
