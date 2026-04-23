@@ -1,2 +1,0 @@
-# Load Zephyr board defconfig descriptions.
-osource "/home/bruno/.pico-sdk/zephyr_workspace/zephyr-main/boards/raspberrypi/rpi_pico2/Kconfig.defconfig"

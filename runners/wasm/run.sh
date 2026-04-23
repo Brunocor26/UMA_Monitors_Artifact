@@ -14,7 +14,7 @@ fi
 
 mkdir -p build
 
-echo "--- Compilando para WASM (WASI) ---"
+echo "--- A compilar para para WASM (WASI) ---"
 $CLANG_PP -O3 \
     --target=wasm32-wasi \
     --sysroot=${WASI_SDK_PATH}/share/wasi-sysroot \

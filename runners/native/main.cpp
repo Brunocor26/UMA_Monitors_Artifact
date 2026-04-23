@@ -1,77 +1,130 @@
 /**
- * Generic main for rmtld3synth-generated monitors.
+ * main.cpp — Exemplo de uso completo do monitor RMTLD3 gerado para a fórmula:
  *
- * To adapt to a different generated monitor, change the three lines
- * in the "Configuration" section below:
- *   1. Include the generated Rtm_monitor_<id>.h
- *   2. Include the generated Rtm_instrument_<id>.h
- *   3. Set WRITER_TYPE to the Writer_rtm__<id> alias from the instrument header
- *   4. Set INSTRUMENT_CLASS to the RTM_INSTRUMENT_<ID> class name
+ *   (a U[10s] b)   →   "a" deve ser verdade até que "b" ocorra, dentro de 10s
  *
- * The macros RTML_BUFFER0_SETUP() and RTML_BUFFER0_TRIGGER_PERIODIC_MONITORS()
- * are always named the same regardless of the formula synthesised.
- * For multiple monitors in one run, additional RTML_BUFFER1_*, RTML_BUFFER2_*, etc.
- * macros will be present in the respective headers.
+ * Cobre:
+ *   1. Lógica de três valores  (T_TRUE / T_FALSE / T_UNKNOWN)
+ *   2. Escrita no buffer       (Writer_rtm__4ddc)
+ *   3. Avaliação da fórmula    (_rtm_compute_4ddc_0)
+ *   4. Monitor periódico       (Rtm_monitor_4ddc_0)
+ *
+ * Compilação (exemplo):
+ *   g++ -std=c++17 -I<rtmlib_include_dir> -o test_monitor main.cpp
  */
 
-// --- Configuration: change these per generated monitor ---
-#include "Rtm_monitor_3da2.h"
-#include "Rtm_instrumen
-t_3da2.h"
-#define WRITER_TYPE      Writer_rtm__3da2
-#define INSTRUMENT_CLASS RTM_INSTRUMENT_3DA2
-// ---------------------------------------------------------
+// ──────────────────────────────────────────────────────────────────────────────
+// Includes da rtmlib (resolvidos via flag -I../../core/src no compilador)
+// ──────────────────────────────────────────────────────────────────────────────
+#include "../../rtmlib/src/rmtld3/rmtld3.h"
+#include "../../monitors/until_monitor/headers/Rtm_compute_4ddc.h"
+#include "../../monitors/until_monitor/headers/Rtm_instrument_4ddc.h"
+#include "../../monitors/until_monitor/headers/Rtm_monitor_4ddc.h"
 
 #include <cstdio>
-#include <unistd.h>
+#include <cstring>
+#include <unistd.h>   // usleep
 
-// Global buffer declaration (satisfies the extern in the instrument header).
-// Must be at file scope.
-RTML_BUFFER0_SETUP()
+// ──────────────────────────────────────────────────────────────────────────────
+// 1. Instância global do buffer (exigida pelo linker — declarado extern nos .h)
+// ──────────────────────────────────────────────────────────────────────────────
 
-int main() {
-    // Writer used to push events into the shared buffer.
-    WRITER_TYPE writer;
 
-    // --- Push events ---
-    // Use writer.push(proposition) for an event timestamped by the writer internally,
-    // or writer.push(proposition, timestamp) to supply an explicit timestamp.
-    //
-    // Propositions are members of INSTRUMENT_CLASS::prop_t (see Rtm_instrument_<id>.h).
-    // Example for this monitor (formula: duration of a in 0..15 >= 5):
-    //
-    //   Push 'a' active from t=0 to t=10 (in the monitor's time unit):
-    writer.push(INSTRUMENT_CLASS::a, 0);
-    writer.push(INSTRUMENT_CLASS::a, 9);
+RTML_BUFFER0_SETUP();   // expande para a definição de __buffer_rtm_monitor_4ddc
 
-    // --- Set up the periodic monitor ---
-    // Expanded manually to pass tbegin = 0, so the monitor evaluates from
-    // the same origin as the pushed event timestamps.
-    RMTLD3_reader<RTML_reader<RTML_buffer<RTM_MONITOR_3DA2_BUFFER_TYPE, RTM_MONITOR_3DA2_BUFFER_SIZE>>>
-        __trace_rtm_monitor_3da2_0 = RMTLD3_reader<
-            RTML_reader<RTML_buffer<RTM_MONITOR_3DA2_BUFFER_TYPE, RTM_MONITOR_3DA2_BUFFER_SIZE>>>(__buffer_rtm_monitor_3da2);
-    timespan tbegin = 0;
-    Rtm_monitor_3da2_0<RMTLD3_reader<RTML_reader<RTML_buffer<RTM_MONITOR_3DA2_BUFFER_TYPE, RTM_MONITOR_3DA2_BUFFER_SIZE>>>>
-        rtm_mon0(200000, __trace_rtm_monitor_3da2_0, tbegin);
-
-    // Start the monitoring thread (period defined in the generated header, here 200000 us).
-    rtm_mon0.enable();
-
-    // Wait for at least one full monitoring period before reading the verdict.
-    usleep(400000); // 400 ms > 200 ms period
-
-    // Stop the monitoring thread.
-    rtm_mon0.disable();
-    rtm_mon0.join();
-
-    // --- Read verdict ---
-    three_valued_type verdict = rtm_mon0.getVeredict();
-    switch (verdict) {
-        case T_TRUE:    printf("Verdict: TRUE  (formula satisfied)\n"); break;
-        case T_FALSE:   printf("Verdict: FALSE (formula violated)\n");  break;
-        case T_UNKNOWN: printf("Verdict: UNKNOWN\n");                   break;
-        default:        printf("Verdict: %d (unexpected)\n", (int)verdict); break;
+// ──────────────────────────────────────────────────────────────────────────────
+// Utilitário: converte three_valued_type para string legível
+// ──────────────────────────────────────────────────────────────────────────────
+static const char *tv_str(three_valued_type v) {
+    switch (v) {
+        case T_TRUE:    return "T_TRUE";
+        case T_FALSE:   return "T_FALSE";
+        case T_UNKNOWN: return "T_UNKNOWN";
+        default:        return "???";
     }
+}
 
+// ──────────────────────────────────────────────────────────────────────────────
+// 2. Escrita no buffer e avaliação directa da fórmula
+// ──────────────────────────────────────────────────────────────────────────────
+static void test_formula_direct() {
+    printf("\n=== [2] Escrita no buffer + avaliação da fórmula ===\n");
+
+    Writer_rtm__4ddc writer;
+
+    // A (T_TRUE,  t= 0): a@0, a@3, b@7   → b em 7s  < 10s
+    writer.push(RTM_INSTRUMENT_4DDC::a,  0.0);
+    writer.push(RTM_INSTRUMENT_4DDC::a,  3.0);
+    writer.push(RTM_INSTRUMENT_4DDC::b,  7.0);
+
+    // B (T_FALSE, t=20): a@20, a@22, b@31 → b em 11s > 10s
+    writer.push(RTM_INSTRUMENT_4DDC::a, 20.0);
+    writer.push(RTM_INSTRUMENT_4DDC::a, 22.0);
+    writer.push(RTM_INSTRUMENT_4DDC::b, 31.0);
+
+    // C (T_TRUE,  t=40): a@40, b@49       → b em  9s < 10s (limite)
+    writer.push(RTM_INSTRUMENT_4DDC::a, 40.0);
+    writer.push(RTM_INSTRUMENT_4DDC::b, 49.0);
+
+    // D (T_FALSE, t=60): a@60, a@65, a@71 → sem b; trace estende-se até 71 > 70
+    writer.push(RTM_INSTRUMENT_4DDC::a, 60.0);
+    writer.push(RTM_INSTRUMENT_4DDC::a, 65.0);
+    writer.push(RTM_INSTRUMENT_4DDC::a, 71.0);
+
+    RTML_BUFFER0_TRIGGER_PERIODIC_MONITORS();
+    __trace_rtm_monitor_4ddc_0.synchronize();
+
+    three_valued_type result;
+    timespan t;
+
+    auto eval = [&](timespan ts, const char *label, const char *expected) {
+        t = ts; result = T_UNKNOWN;
+        if (__trace_rtm_monitor_4ddc_0.set(t) == 0)
+            result = _rtm_compute_4ddc_0(__trace_rtm_monitor_4ddc_0, t);
+        printf("%-40s = %-10s (esperado: %s)\n", label, tv_str(result), expected);
+    };
+
+    eval( 0, "Caso A (a@0,a@3,b@7   | t= 0)", "T_TRUE");
+    eval(20, "Caso B (a@20,a@22,b@31 | t=20)", "T_FALSE");
+    eval(40, "Caso C (a@40,b@49     | t=40)", "T_TRUE");
+    eval(60, "Caso D (a@60,a@65,a@71 | t=60)", "T_FALSE");
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// 4. Monitor periódico — arranca, escreve eventos, lê veredito
+// ──────────────────────────────────────────────────────────────────────────────
+static void test_periodic_monitor() {
+    printf("\n=== [3] Monitor periódico ===\n");
+
+    // Prepara trace + monitor com período 200ms (gerado pela tool)
+    RTML_BUFFER0_TRIGGER_PERIODIC_MONITORS();
+
+    rtm_mon0.enable();
+    printf("Monitor iniciado (período=200ms). A aguardar 2 ciclos...\n");
+
+    Writer_rtm__4ddc writer;
+    writer.push(RTM_INSTRUMENT_4DDC::b, 1.0);
+
+    usleep(500000);   // espera 500 ms -> ~2 ciclos do monitor
+
+    printf("Veredito do monitor após 500 ms: %s\n", tv_str(rtm_mon0.getVeredict()));
+
+    rtm_mon0.disable();
+    printf("Monitor terminado.\n");
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// main
+// ──────────────────────────────────────────────────────────────────────────────
+int main() {
+    printf("╔══════════════════════════════════════════════════════╗\n");
+    printf("║  Teste completo — fórmula: (a U[10s] b)              ║\n");
+    printf("╚══════════════════════════════════════════════════════╝\n");
+
+    //test_three_valued_logic();
+    test_formula_direct();
+    //test_periodic_monitor();
+
+    printf("\n✓ Todos os testes concluídos.\n");
     return 0;
 }

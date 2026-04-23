@@ -1,6 +1,6 @@
 # Artifact: Universal Microservices for Application Monitoring
 
-Este repositório contém o artifact da tese de licenciatura sobre Microserviços Universais para Monitorização de Aplicações. O projeto demonstra como monitores gerados a partir de fórmulas RMTLD3 podem ser executados em ambientes heterogêneos (Nativo, WASM e Embedded).
+Este repositório contém o artifact do projeto de licenciatura sobre Microserviços Universais para Monitorização de Aplicações. O projeto demonstra como monitores gerados a partir de fórmulas RMTLD3 podem ser executados em ambientes heterogêneos (Nativo, WASM e Embedded) com um mesmo binário WASM, através do [WAMR](https://github.com/bytecodealliance/wasm-micro-runtime) (WebAssembly Micro Runtime).
 
 ---
 
@@ -8,14 +8,13 @@ Este repositório contém o artifact da tese de licenciatura sobre Microserviço
 
 A organização do projeto separa os **monitores** (o que é monitorado) dos **runners** (onde é monitorado):
 
-*   **`core/`**: Biblioteca `rtmlib` (submódulo git) contendo o motor de avaliação e buffers.
+*   **`rtmlib/`**: Biblioteca `rtmlib` (submódulo git) que contém o motor de avaliação e buffers.
 *   **`monitors/`**: Fórmulas RMTLD3 e seus cabeçalhos C++ gerados.
-    *   `duration_formula/`: Fórmula `duration of a in 0..15 >= 5`.
-    *   `until_formula/`: Fórmula `a U[10s] b`.
+    *   `duration_monitor/`: Fórmula `duration of a in 0..15 >= 5`.
+    *   `until_monitor/`: Fórmula `a U[10s] b`.
 *   **`runners/`**: Implementações hospedeiras para cada plataforma.
     *   `native/`: Aplicação C++11 para desktop.
     *   `wasm/`: Microserviço em WebAssembly (WASI).
-    *   `pico/`: Implementação para Raspberry Pi Pico (RP2040).
 *   **`scripts/`**: Scripts de automação (setup, patches, build).
 *   **`docs/`**: Documentação detalhada, guias e diagramas.
 
@@ -56,5 +55,3 @@ Veja as instruções em `runners/pico/README.md`.
 *   [Detalhes do Build WASM](docs/guides/WASM_BUILD.md)
 *   [Notas sobre WASI e Compatibilidade](docs/guides/solucao.md)
 
----
-*Este artifact faz parte do projeto de tese na UMA.*

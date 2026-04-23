@@ -16,10 +16,10 @@
 // ──────────────────────────────────────────────────────────────────────────────
 // Includes da rtmlib (resolvidos via flag -I../../core/src no compilador)
 // ──────────────────────────────────────────────────────────────────────────────
-#include "rmtld3/rmtld3.h"
-#include "Rtm_compute_4ddc.h"
-#include "Rtm_instrument_4ddc.h"
-#include "Rtm_monitor_4ddc.h"
+#include "../../rtmlib/src/rmtld3/rmtld3.h"
+#include "../../monitors/until_monitor/headers/Rtm_compute_4ddc.h"
+#include "../../monitors/until_monitor/headers/Rtm_instrument_4ddc.h"
+#include "../../monitors/until_monitor/headers/Rtm_monitor_4ddc.h"
 
 #include <cstdio>
 #include <cstring>

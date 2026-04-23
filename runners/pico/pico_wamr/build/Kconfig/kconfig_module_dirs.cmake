@@ -1,5 +1,0 @@
-set(kconfig_env_dirs)
-list(APPEND kconfig_env_dirs ZEPHYR_CMSIS_6_MODULE_DIR=/home/bruno/.pico-sdk/zephyr_workspace/modules/hal/cmsis_6)
-list(APPEND kconfig_env_dirs ZEPHYR_HAL_INFINEON_MODULE_DIR=/home/bruno/.pico-sdk/zephyr_workspace/modules/hal/infineon)
-list(APPEND kconfig_env_dirs ZEPHYR_HAL_RPI_PICO_MODULE_DIR=/home/bruno/.pico-sdk/zephyr_workspace/modules/hal/rpi_pico)
-list(APPEND kconfig_env_dirs ZEPHYR_SEGGER_MODULE_DIR=/home/bruno/.pico-sdk/zephyr_workspace/modules/debug/segger)

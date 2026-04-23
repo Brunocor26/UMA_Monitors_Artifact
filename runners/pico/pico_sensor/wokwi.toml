@@ -1,4 +1,0 @@
-[wokwi]
-version = 1
-firmware = "build/pico_sensor.elf"
-elf = "build/pico_sensor.elf"
