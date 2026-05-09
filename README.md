@@ -29,23 +29,20 @@ Após clonar o repositório, execute o script de setup para configurar os submó
 ./scripts/setup.sh
 ```
 
-### 2. Compilação — Nativo (Desktop)
+### 2. Compilação - Nativo (Desktop)
 ```bash
 cd runners/native
 ./compilar.sh
 ./monitor
 ```
 
-### 3. Compilação — WebAssembly (WASI)
+### 3. Compilação - WebAssembly (WASI)
 Requer o [WASI-SDK](https://github.com/WebAssembly/wasi-sdk) em `/opt/wasi-sdk`.
 ```bash
 cd runners/wasm
 ./run.sh
 iwasm build/monitor.wasm
 ```
-
-### 4. Raspberry Pi Pico
-Veja as instruções em `runners/pico/README.md`.
 
 ---
 
