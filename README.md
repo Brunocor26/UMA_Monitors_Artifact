@@ -15,6 +15,9 @@ A organização do projeto separa os **monitores** (o que é monitorado) dos **r
 *   **`runners/`**: Implementações hospedeiras para cada plataforma.
     *   `native/`: Aplicação C++11 para desktop.
     *   `wasm/`: Microserviço em WebAssembly (WASI).
+*   **`intoNuttx/`**: Aplicações NuttX built-in integradas via CustomApps.
+    *   `pulse_reader/`: Contador de pulsos GPIO com cálculo de RPM e frequência.
+    *   `wasm_receiver/`: (em desenvolvimento) Recetor WASM para NuttX.
 *   **`scripts/`**: Scripts de automação (setup, patches, build).
 *   **`docs/`**: Documentação detalhada, guias e diagramas.
 
