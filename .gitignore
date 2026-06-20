@@ -1,3 +1,6 @@
 .vscode
 runners/native/monitor
 runners/wasm/build
+
+intoNuttx/wasm_receiver/build
+intoNuttx/wasm_server/build
