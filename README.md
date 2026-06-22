@@ -54,4 +54,3 @@ iwasm build/monitor.wasm
 *   [Guia de Geração de Monitores](docs/guides/generate_monitors.md)
 *   [Detalhes do Build WASM](docs/guides/WASM_BUILD.md)
 *   [Notas sobre WASI e Compatibilidade](docs/guides/solucao.md)
-
