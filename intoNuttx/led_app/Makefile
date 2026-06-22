@@ -1,0 +1,14 @@
+include $(APPDIR)/Make.defs
+
+# Led App built-in application info
+
+PROGNAME = $(CONFIG_CUSTOM_APPS_LED_PROGNAME)
+PRIORITY = $(CONFIG_CUSTOM_APPS_LED_PRIORITY)
+STACKSIZE = $(CONFIG_CUSTOM_APPS_LED_STACKSIZE)
+MODULE = $(CONFIG_CUSTOM_APPS_LED)
+
+# Led App
+
+MAINSRC = LedApp.c
+
+include $(APPDIR)/Application.mk

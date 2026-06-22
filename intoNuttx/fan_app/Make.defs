@@ -1,0 +1,3 @@
+ifneq ($(CONFIG_CUSTOM_APPS_FAN),)
+CONFIGURED_APPS += $(APPDIR)/CustomApps/FanApp
+endif

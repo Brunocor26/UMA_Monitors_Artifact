@@ -1,0 +1,14 @@
+include $(APPDIR)/Make.defs
+
+# Fan App built-in application info
+
+PROGNAME = $(CONFIG_CUSTOM_APPS_FAN_PROGNAME)
+PRIORITY = $(CONFIG_CUSTOM_APPS_FAN_PRIORITY)
+STACKSIZE = $(CONFIG_CUSTOM_APPS_FAN_STACKSIZE)
+MODULE = $(CONFIG_CUSTOM_APPS_FAN)
+
+# Fan App
+
+MAINSRC = FanApp.c
+
+include $(APPDIR)/Application.mk

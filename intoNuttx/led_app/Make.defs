@@ -1,0 +1,3 @@
+ifneq ($(CONFIG_CUSTOM_APPS_LED),)
+CONFIGURED_APPS += $(APPDIR)/CustomApps/LedApp
+endif

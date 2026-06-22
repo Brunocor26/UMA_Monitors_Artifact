@@ -1,0 +1,29 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+config CUSTOM_APPS_LED
+    tristate "Led App"
+    default n
+    ---help---
+        Enable the Led App (alarm LED driven over UDP)
+
+if CUSTOM_APPS_LED
+
+config CUSTOM_APPS_LED_PROGNAME
+    string "Program name"
+    default "led_app"
+    ---help---
+        This is the name of the program that will be used when the NSH ELF
+        program is installed.
+
+config CUSTOM_APPS_LED_PRIORITY
+    int "Led App task priority"
+    default 100
+
+config CUSTOM_APPS_LED_STACKSIZE
+    int "Led App stack size"
+    default 2048
+
+endif
