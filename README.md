@@ -12,12 +12,23 @@ A organização do projeto separa os **monitores** (o que é monitorado) dos **r
 *   **`monitors/`**: Fórmulas RMTLD3 e seus cabeçalhos C++ gerados.
     *   `duration_monitor/`: Fórmula `duration of a in 0..15 >= 5`.
     *   `until_monitor/`: Fórmula `a U[10s] b`.
+    *   `final_monitor/`: Fórmula `a -> (a U[<10s] b)` usada no *running example* (supervisão da ventoinha).
 *   **`runners/`**: Implementações hospedeiras para cada plataforma.
     *   `native/`: Aplicação C++11 para desktop.
     *   `wasm/`: Microserviço em WebAssembly (WASI).
-*   **`intoNuttx/`**: Aplicações NuttX built-in integradas via CustomApps.
-    *   `pulse_reader/`: Contador de pulsos GPIO com cálculo de RPM e frequência.
-    *   `wasm_receiver/`: (em desenvolvimento) Recetor WASM para NuttX.
+*   **`intoNuttx/`**: *Running example* no NuttX — malha fechada de controlo e supervisão de uma ventoinha, em que cada peça é um microserviço que comunica por UDP:
+
+    ```
+    pulse_reader --RPM--> wasm_server --DUTY--> fan_app --PWM--> ventoinha
+                              |  (monitor RMTLD3)
+                              +-----------------ALARM--> led_app --GPIO--> LED
+    ```
+
+    *   `pulse_reader/`: app NuttX que conta pulsos GPIO e calcula RPM/frequência (sensor).
+    *   `wasm_server/`: microserviço WASM (WASI) que controla o duty para um RPM-alvo e supervisiona com um monitor RMTLD3 (cérebro).
+    *   `fan_app/`: app NuttX que aplica o PWM na ventoinha via ioctl (atuador).
+    *   `led_app/`: app NuttX que pisca um LED quando o monitor deteta uma violação (alarme).
+    *   `init.sh`: arranca as quatro peças de uma vez no NSH.
 *   **`scripts/`**: Scripts de automação (setup, patches, build).
 *   **`docs/`**: Documentação detalhada, guias e diagramas.
 
