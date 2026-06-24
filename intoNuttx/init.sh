@@ -28,7 +28,8 @@ sleep 1
 cd /mnt/sd0
 sleep 1
 
-iwasm --stack-size=24576 --addr-pool=0.0.0.0/0 servidor.wasm 5001 5002 127.0.0.1 5003 &
+TARGET=${1:-600}
+iwasm --stack-size=24576 --addr-pool=0.0.0.0/0 servidor.wasm $TARGET 5001 5002 127.0.0.1 5003 &
 sleep 1
 
 # 4) Sensor de RPM (le o GPIO, envia RPM p/ 127.0.0.1:5001)

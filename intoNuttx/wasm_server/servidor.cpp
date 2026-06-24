@@ -30,14 +30,13 @@
 #include "monitor_api.h"
 
 /* ------------------------- Parâmetros de controlo ------------------------- */
-#define TARGET_RPM     600    /* RPM desejado                              */
+#define TARGET_RPM_DEFAULT     600    /* RPM desejado default                      */
 #define RPM_TOLERANCE  50     /* meia-largura da banda "dentro do alvo"    */
 
 #define DUTY_MIN       0
 #define DUTY_MAX       100
 #define DUTY_INIT      50
-#define RPM_PER_STEP   100    /* RPM de erro por cada 1% de ajuste de duty */
-#define MAX_STEP       5      /* ajuste máximo de duty por amostra (%)     */
+#define RPM_PER_STEP   100    /* ganho integral: Ki = 1 / RPM_PER_STEP     */
 
 /* ------------------------- Parâmetros de supervisão ----------------------- */
 #define MON_WINDOW     10     /* janela da fórmula (a U[<10s] b)           */
@@ -53,7 +52,7 @@
 #define LED_PORT_DEFAULT 5003
 #define LISTEN_PORT_DEFAULT 5001
 
-static int clampi(int v, int lo, int hi)
+static int value_limit_between(int v, int lo, int hi)
 {
     return (v < lo) ? lo : (v > hi) ? hi : v;
 }
@@ -92,11 +91,13 @@ int main(int argc, char *argv[])
 
     setvbuf(stdout, NULL, _IONBF, 0);
 
-    /* Args: [listen_port] [fan_port] [fan_host] [led_port] */
-    if (argc > 1) listen_port = atoi(argv[1]);
-    if (argc > 2) fan_port    = atoi(argv[2]);
-    if (argc > 3) fan_host    = argv[3];
-    if (argc > 4) led_port    = atoi(argv[4]);
+    /* Args: [target_rpm] [listen_port] [fan_port] [fan_host] [led_port] */
+    int target_rpm = TARGET_RPM_DEFAULT;
+    if (argc > 1) target_rpm  = atoi(argv[1]);
+    if (argc > 2) listen_port = atoi(argv[2]);
+    if (argc > 3) fan_port    = atoi(argv[3]);
+    if (argc > 4) fan_host    = argv[4];
+    if (argc > 5) led_port    = atoi(argv[5]);
 
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0) { perror("recv socket"); return EXIT_FAILURE; }
@@ -125,9 +126,10 @@ int main(int argc, char *argv[])
 
     printf("[Fan Controller] Listening on UDP %d, fan at %s:%d, led at %s:%d "
            "(target=%d RPM)\n",
-           listen_port, fan_host, fan_port, fan_host, led_port, TARGET_RPM);
+           listen_port, fan_host, fan_port, fan_host, led_port, target_rpm);
 
     int duty = DUTY_INIT;
+    double duty_internal = DUTY_INIT;
     int alarm = -1;            /* -1 desconhecido, 0 limpo, 1 em alarme */
     double t_start = now_seconds();
     long last_ts = -1;
@@ -147,19 +149,24 @@ int main(int argc, char *argv[])
 
         double t = now_seconds() - t_start;
         long its = (long)t;
-        long err = (long)TARGET_RPM - (long)rpm;
-        int out_of_target = (labs(err) > RPM_TOLERANCE) ? 1 : 0;
+        
+        // 1. Calcula o Erro: Diferença entre o target_rpm e o RPM atual
+        long err = (long)target_rpm - (long)rpm;
+        bool out_of_target = (labs(err) > RPM_TOLERANCE) ? 1 : 0;
 
-        /* CONTROLO: proporcional, persegue o alvo */
-        if (out_of_target) {
-            int step = (int)(err / RPM_PER_STEP);
-            if (step == 0) step = (err > 0) ? 1 : -1;
-            step = clampi(step, -MAX_STEP, MAX_STEP);
-            duty = clampi(duty + step, DUTY_MIN, DUTY_MAX);
-            if (send_duty(sockfd, &fan_addr, duty) < 0) perror("sendto fan");
-        }
+        /* CONTROLO: controlador integral discreto (forma incremental)
+         *   u_k = sat( u_{k-1} + Ki * err ),  Ki = 1 / RPM_PER_STEP */
+        // 2 e 3. Calcula a Correção e Ajusta o Duty Cycle: 
+        // Acumula a correção em precisão dupla para não perder valores fracionários
+        duty_internal += (double)err / RPM_PER_STEP;
+        duty_internal = (duty_internal < DUTY_MIN) ? DUTY_MIN : (duty_internal > DUTY_MAX) ? DUTY_MAX : duty_internal;
+        duty = (int)duty_internal;
+        
+        // 4. Atua na Ventoinha: Envia o novo valor ajustado para a ventoinha via UDP
+        if (send_duty(sockfd, &fan_addr, duty) < 0) perror("sendto fan");
 
         /* -- SUPERVISÃO: monitor RMTLD3 (um evento por segundo) -- */
+        // 5. Monitorização: Alimenta os dados para o monitor a cada 1 segundo
         if (its > last_ts) {
             mon_push(out_of_target, (double)its);
             last_ts = its;
@@ -190,7 +197,7 @@ int main(int argc, char *argv[])
         }
 
         printf("[Fan Controller] RPM=%lu target=%d err=%ld | mon=%s | duty=%d%%\n",
-               rpm, TARGET_RPM, err, verdict_str(vd), duty);
+               rpm, target_rpm, err, verdict_str(vd), duty);
     }
 
     close(sockfd);

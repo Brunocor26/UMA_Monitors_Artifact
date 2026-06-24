@@ -20,8 +20,7 @@
  */
 #include "monitor_api.h"
 
-/* Headers core da rtmlib (os gerados incluem-nos via <...>, resolvidos por
- * -I rtmlib/src). */
+/* Headers core da rtmlib (precisa -I rtmlib/src). */
 #include <rmtld3/rmtld3.h>
 #include <event.h>
 #include <circularbuffer.h>

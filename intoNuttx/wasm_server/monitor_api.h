@@ -1,7 +1,7 @@
 /**
  * monitor_api.h - API mínima (C ABI) sobre o monitor RMTLD3.
  *
- * O monitor é compilado numa TU própria (mon_template.cpp) que inclui os
+ * O monitor é compilado com mon_template.cpp que inclui os
  * cabeçalhos gerados pelo rmtld3synth (cujos nomes têm um hash que muda a
  * cada regeneração). O servidor usa-o só através destas funções.
  *
