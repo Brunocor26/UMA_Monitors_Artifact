@@ -60,6 +60,41 @@ iwasm build/monitor.wasm
 
 ---
 
+## Benchmark (Avaliação de Desempenho)
+
+O script `benchmark.sh` permite comparar o desempenho e o tamanho em disco (footprint) do microserviço de monitorização entre duas abordagens de isolamento e execução:
+1. **WebAssembly (WASM):** O módulo compilado (`servidor.wasm`) executado diretamente através do runtime WAMR (`iwasm`).
+2. **Contentorização (Docker):** O executável nativo compilado estaticamente para 32-bits e empacotado num contentor leve baseado em Alpine Linux i386.
+
+### Métricas Avaliadas
+
+*   **Tamanho em Disco (Footprint):** Compara o tamanho do ficheiro `.wasm` gerado com o tamanho total da imagem Docker (`uma-servidor-i386`).
+*   **Tempo de Arranque e Resposta:** Mede (usando a ferramenta `hyperfine`) o tempo necessário para inicializar a instância (contentor vs runtime WASM), processar uma mensagem de teste enviada via UDP (simulando a leitura de RPM da ventoinha) e terminar o processo.
+
+### Pré-requisitos
+
+Para executar o benchmark, garanta que tem instalado no seu sistema:
+*   [Docker](https://www.docker.com/)
+*   [hyperfine](https://github.com/sharkdp/hyperfine) (ferramenta de benchmarking em linha de comandos)
+*   [WAMR (iwasm)](https://github.com/bytecodealliance/wasm-micro-runtime) no seu PATH
+*   Python 3 (utilizado pelo script para enviar pacotes UDP de teste)
+
+### Como Executar
+
+Execute o seguinte comando a partir da raiz do repositório:
+
+```bash
+./benchmark.sh
+```
+
+O script irá:
+1. Construir a imagem Docker local (`uma-servidor-i386`).
+2. Imprimir o tamanho da imagem Docker e do ficheiro `.wasm`.
+3. Executar o benchmark com o `hyperfine` para a versão WASM (20 execuções com 3 de aquecimento).
+4. Executar o benchmark com o `hyperfine` para a versão Docker (com 3 de aquecimento).
+
+---
+
 ## Documentação Detalhada
 
 *   [Guia de Geração de Monitores](docs/guides/generate_monitors.md)
