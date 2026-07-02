@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
 
-WASI_SDK_PATH="/opt/wasi-sdk"
+WASI_SDK_PATH="/Users/brunocor/Desktop/wasi-sdk-33.0-x86_64-macos"
 CLANG="${WASI_SDK_PATH}/bin/clang"
 CLANGPP="${WASI_SDK_PATH}/bin/clang++"
 
-WAMR_ROOT="/home/bruno/Desktop/Projeto/webassembly/wasm-micro-runtime"
+# Mudar de acordo
+WAMR_ROOT="/Users/brunocor/Desktop/wasm-micro-runtime"
 HEADER_PATH=$(find "$WAMR_ROOT" -name "wasi_socket_ext.h" | head -n 1)
 WRAPPER_SRC=$(find "$WAMR_ROOT" -name "wasi_socket_ext.c" | head -n 1)
 WAMR_INC=$(dirname "$HEADER_PATH")

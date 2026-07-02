@@ -1,0 +1,23 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.29kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/i386/alpine:latest
+#2 ERROR: no match for platform in manifest: not found
+------
+ > [internal] load metadata for docker.io/i386/alpine:latest:
+------
+Dockerfile:40
+--------------------
+  38 |     
+  39 |     # Runtime minimalista
+  40 | >>> FROM i386/alpine:latest
+  41 |     
+  42 |     WORKDIR /app
+--------------------
+ERROR: failed to build: failed to solve: i386/alpine:latest: failed to resolve source metadata for docker.io/i386/alpine:latest: no match for platform in manifest: not found
+
+[1mWhat's next:[0m
+    Debug this build failure with Gordon → docker ai "help me fix this build failure"

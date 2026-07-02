@@ -1,0 +1,7 @@
+.git
+.gitignore
+.gitmodules
+**/*.o
+**/*.wasm
+intoNuttx/wasm_server/build/
+docs/
